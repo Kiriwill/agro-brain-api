@@ -2,6 +2,7 @@ import {validateOrReject, ValidationError} from "class-validator";
 import {Service, Repo, Farmer, Farm, Crop} from "./service"
 import {MoreThan} from "typeorm";
 import {AppError, HttpCode} from "../http/errorHandler";
+import logger from "../http/logger";
 
 class AgroService implements Service {
 	private repo: Repo;
@@ -9,13 +10,22 @@ class AgroService implements Service {
 	constructor(repo: Repo) {
 		this.repo = repo;
 	}
-	
-	public async createFarmer(farmer: Farmer): Promise<Object[] | Object | unknown> {
+
+	public async createFarmer(farmers: Farmer[]): Promise<Object[] | Object | unknown> {
 		try {
-			await validateOrReject(farmer);
-			await this.repo.insertFarmer(farmer);
+			for (const f of farmers){
+				await validateOrReject(f);
+			};
+			await this.repo.insertFarmer(farmers);
 			return;
-		} catch (errors) {
+		} catch (errors: any) {
+			logger.error(errors)
+			if (errors.length > 0 && errors[0] instanceof ValidationError) {
+				throw new AppError({
+					httpCode: HttpCode.BAD_REQUEST,
+					description: `invalid fields: ${errors.map((e:any) => e.property)}`
+				});
+			}
 			throw errors;
 		}
 	}
@@ -25,7 +35,14 @@ class AgroService implements Service {
 			await validateOrReject(farmer, { skipMissingProperties: true });
 			await this.repo.updateFarmer(farmer, parseInt(id));
 			return;
-		} catch (errors) {
+		} catch (errors:any) {
+			logger.error(errors)
+			if (errors.length > 0 && errors[0] instanceof ValidationError) {
+				throw new AppError({
+					httpCode: HttpCode.BAD_REQUEST,
+					description: `invalid fields: ${errors.map((e:any) => e.property)}`
+				});
+			}
 			throw errors;
 		}
 	}
@@ -34,7 +51,14 @@ class AgroService implements Service {
 		try {
 			await this.repo.deleteFarmer(parseInt(id));
 			return;
-		} catch (errors) {
+		} catch (errors:any) {
+			logger.error(errors)
+			if (errors.length > 0 && errors[0] instanceof ValidationError) {
+				throw new AppError({
+					httpCode: HttpCode.BAD_REQUEST,
+					description: `invalid fields: ${errors.map((e:any) => e.property)}`
+				});
+			}
 			throw errors;
 		}
 	}
@@ -43,24 +67,40 @@ class AgroService implements Service {
 		try {
 			await this.repo.bindFarms(parseInt(farmerId), farms);
 			return;
-		} catch (errors) {
+		} catch (errors:any) {
+			logger.error(errors)
+			if (errors.length > 0 && errors[0] instanceof ValidationError) {
+				throw new AppError({
+					httpCode: HttpCode.BAD_REQUEST,
+					description: `invalid fields: ${errors.map((e:any) => e.property)}`
+				});
+			}
 			throw errors;
 		}
 	}
 
-	public async createFarm(farm: Farm): Promise<Object[] | Object | unknown> {
+	public async createFarm(farms: Farm[]): Promise<Object[] | Object | unknown> {
 		try {
-			if ((farm.cropArea + farm.vegetableArea) > farm.totalArea) {
-				throw new AppError({
-					httpCode: HttpCode.BAD_REQUEST,
-					description: "invalid area"
-				});
+			for (const f of farms){
+				if ((f.cropArea + f.vegetableArea) > f.totalArea) {
+					throw new AppError({
+						httpCode: HttpCode.BAD_REQUEST,
+						description: "invalid area"
+					});
+				}
+				await validateOrReject(farms);
 			}
 
-			await validateOrReject(farm);
-			await this.repo.insertFarm(farm);
+			await this.repo.insertFarm(farms);
 			return;
-		} catch (errors) {
+		} catch (errors:any) {
+			logger.error(errors)
+			if (errors.length > 0 && errors[0] instanceof ValidationError) {
+				throw new AppError({
+					httpCode: HttpCode.BAD_REQUEST,
+					description: `invalid fields: ${errors.map((e:any) => e.property)}`
+				});
+			}
 			throw errors;
 		}
 	}
@@ -77,22 +117,32 @@ class AgroService implements Service {
 			await validateOrReject(farm, { skipMissingProperties: true });
 			await this.repo.updateFarm(farm, parseInt(id));
 			return;
-		} catch (errors) {
+		} catch (errors:any) {
+			logger.error(errors)
+			if (errors.length > 0 && errors[0] instanceof ValidationError) {
+				throw new AppError({
+					httpCode: HttpCode.BAD_REQUEST,
+					description: `invalid fields: ${errors.map((e:any) => e.property)}`
+				});
+			}
 			throw errors;
 		}
 	}
 
 
-	public async createCrop(crop: Crop): Promise<Object[] | Object | unknown> {
+	public async createCrop(crops: Crop[]): Promise<Object[] | Object | unknown> {
 		try {
-			await validateOrReject(crop);
-			await this.repo.insertCrop(crop);
+			for (const c of crops){
+				await validateOrReject(c);
+			}
+			await this.repo.insertCrop(crops);
 			return;
 		} catch (errors: any) {
+			logger.error(errors)
 			if (errors.length > 0 && errors[0] instanceof ValidationError) {
 				throw new AppError({
 					httpCode: HttpCode.BAD_REQUEST,
-					description: "invalid area"
+					description: `invalid fields: ${errors.map((e:any) => e.property)}`
 				});
 			}
 			throw errors;
@@ -104,8 +154,14 @@ class AgroService implements Service {
 			await validateOrReject(crop, { skipMissingProperties: true });
 			await this.repo.updateCrop(crop, parseInt(id));
 			return;
-		} catch (errors) {
-			console.log(errors)
+		} catch (errors:any) {
+			logger.error(errors)
+			if (errors.length > 0 && errors[0] instanceof ValidationError) {
+				throw new AppError({
+					httpCode: HttpCode.BAD_REQUEST,
+					description: `invalid fields: ${errors.map((e:any) => e.property)}`
+				});
+			}
 			throw errors;
 		}
 	}
@@ -114,7 +170,14 @@ class AgroService implements Service {
 		try {
 			await this.repo.bindCrops(parseInt(cropId), crops);
 			return;
-		} catch (errors) {
+		} catch (errors:any) {
+			logger.error(errors)
+			if (errors.length > 0 && errors[0] instanceof ValidationError) {
+				throw new AppError({
+					httpCode: HttpCode.BAD_REQUEST,
+					description: `invalid fields: ${errors.map((e:any) => e.property)}`
+				});
+			}
 			throw errors;
 		}
 	}
@@ -132,7 +195,8 @@ class AgroService implements Service {
 			const areabyCrop = await this.repo.selectAreaByCrop();
 			
 			return {totalCount, vegetableTotal, cropTotal, areabyState, vegetablebyState, cropsbyState, areabyCrop};
-		} catch (errors) {
+		} catch (errors:any) {
+			logger.error(errors)
 			throw errors;
 		}
 	}

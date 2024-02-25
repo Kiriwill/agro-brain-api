@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn, Unique, BeforeInsert, BeforeUpdate } from "typeorm"
-import { IsNotEmpty, IsOptional, Length, Matches, MaxLength } from "class-validator"
-import IsCpfValid, { IsCnpjValid } from "./customValidators";
-import {PickKeysByType} from "typeorm/common/PickKeysByType";
+import { IsNotEmpty, MaxLength } from "class-validator"
+import IsCpfValid, {IsCnpjValid} from "./customValidators";
 
 @Entity({ name: "farmer"})
 export class Farmer extends BaseEntity {
@@ -40,7 +39,7 @@ export class Farmer extends BaseEntity {
 	@UpdateDateColumn({name: "updated_at"})
 	updatedAt: Date;
 
-	@BeforeInsert()
+    @BeforeInsert()
     @BeforeUpdate()
     sanitizeCPF() {
         // Remove any non-numeric characters from the CPF
@@ -49,14 +48,16 @@ export class Farmer extends BaseEntity {
         }
     }
 
-	@BeforeInsert()
+    @BeforeInsert()
     @BeforeUpdate()
     sanitizeCNPJ() {
         // Remove any non-numeric characters from the CPF
         if (this.cnpj) {
-            this.cnpj = this.cnpj.replace(/\D/g, '');
+            this.cnpj= this.cnpj.replace(/\D/g, '');
         }
     }
+
+
 }
 
 @Entity({ name: "farm"})
@@ -100,6 +101,8 @@ export class Farm extends BaseEntity {
 
 	@UpdateDateColumn({name: "updated_at"})
 	updatedAt: Date;
+
+
 }
 
 @Entity({ name: "crop"})
@@ -124,15 +127,15 @@ export class Crop extends BaseEntity {
 
 // All Storage Methods (for visualization)
 export interface Repo {
-	insertFarmer(farmer: Farmer): Promise<Object | Object[] | unknown>;
+	insertFarmer(farmers: Farmer[]): Promise<Object | Object[] | unknown>;
 	updateFarmer(farmer: Farmer, id: number): Promise<Object | Object[] | unknown>;
 	deleteFarmer(id: number): Promise<Object | Object[] | unknown>
 	bindFarms(farmerId: number, farms: Farm[]): Promise<Object | Object[] | unknown>;
 
-	insertFarm(farm: Farm): Promise<Object | Object[] | unknown>;
+	insertFarm(farms: Farm[]): Promise<Object | Object[] | unknown>;
 	updateFarm(farm: Farm, id: number): Promise<Object | Object[] | unknown>;
 
-	insertCrop(crop: Crop): Promise<Object[] | Object | unknown>;
+	insertCrop(crops: Crop[]): Promise<Object[] | Object | unknown>;
 	updateCrop(crop: Crop, id: number): Promise<Object | Object[] | unknown>;
 	bindCrops(farmId: number, crops: Crop[]): Promise<Object | Object[] | unknown>;
 
@@ -145,15 +148,15 @@ export interface Repo {
 
 // All Bussines Rules (for visualization)
 export interface Service {
-	createFarmer(farmer: Farmer): Promise<Object[] | Object | unknown>;
+	createFarmer(farmers: Farmer[]): Promise<Object[] | Object | unknown>;
 	updateFarmer(farmer: Farmer, id: string): Promise<Object | Object[] | unknown>;
 	removeFarmer(id: string): Promise<Object | Object[] | unknown>
 
 	bindFarms(farmerId: string, farms: Farm[]): Promise<Object | Object[] | unknown>;
-	createFarm(farm: Farm): Promise<Object | Object[] | unknown>;
+	createFarm(farms: Farm[]): Promise<Object | Object[] | unknown>;
 	updateFarm(farm: Farm, id: string): Promise<Object | Object[] | unknown>;
 
-	createCrop(crop: Crop): Promise<Object[] | Object | unknown>;
+	createCrop(crops: Crop[]): Promise<Object[] | Object | unknown>;
 	updateCrop(crop: Crop, id: string): Promise<Object | Object[] | unknown>;
 	bindCrops(farmId: string, crops: Crop[]): Promise<Object | Object[] | unknown>;
 

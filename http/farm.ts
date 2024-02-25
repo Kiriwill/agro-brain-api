@@ -24,7 +24,7 @@ const farmRouter = (svc: Service) => {
 		}
 	})
 
-		router.put('/:farmId', async (req: Request, res: Response, next: NextFunction) => {
+	router.put('/:farmId', async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const farm = Farm.create(req.body);
 			if (Object.keys(farm).length === 0){
@@ -43,30 +43,25 @@ const farmRouter = (svc: Service) => {
 
 	})
 
-	router.post('/:farmId/crops', async (req: Request, res: Response) => {
-		if (!req.params.farmId) {
-			return res.status(400).json({})
+	router.post('/:farmId/crops', async (req: Request, res: Response, next: NextFunction) => {
+		try{
+			const farmId = req.params.farmId
+
+			let crops:Crop[] = Crop.create(req.body);
+			if (crops.length === 0){
+				throw new AppError({
+					httpCode: HttpCode.BAD_REQUEST,
+					description: "invalid resource"
+				});
+			}
+
+			await svc.bindCrops(farmId, crops);
+			res.json();
+		} catch(error) {
+			logger.error("something went wrong on saving farmer")
+			next(error)
 		}
 
-		const farmId = req.params.farmId
-
-		let crops:Crop[] = Crop.create(req.body);
-		if (crops.length === 0){
-			return res.status(400).json({})
-		}
-
-		const err = await svc.bindCrops(farmId, crops);
-		if (err) {
-			logger.error({
-				level: 'error',
-				message: "something went wrong on saving crops",
-				meta: err
-			})
-			res.status(400).send();
-			return
-		}
-
-		res.json();
 	})
 
 	router.get('/dashboard', async (req: Request, res: Response) => {

@@ -4,6 +4,7 @@ import {cnpj, cpf } from "cpf-cnpj-validator";
 @ValidatorConstraint({ async: false })
 class CpfIsValid implements ValidatorConstraintInterface {
   validate(num: string, args: ValidationArguments): boolean {
+	  console.log(num)
 	return cpf.isValid(num)
   }
 }
@@ -38,3 +39,4 @@ export function IsCnpjValid(validationOptions?: ValidationOptions) {
     });
   };
 }
+

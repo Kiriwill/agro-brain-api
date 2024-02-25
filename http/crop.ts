@@ -24,27 +24,23 @@ const cropRouter = (svc: Service) => {
 		}
 	})
 
-	router.put('/:cropId', async (req: Request, res: Response) => {
-		const crop = Crop.create(req.body);
-		if (Object.keys(crop).length === 0){
-			return res.status(400).json({})
-		}
-		if (!req.params.cropId) {
-			return res.status(400).json({})
-		}
-		
-		const err = await svc.updateCrop(crop, req.params.cropId);
-		if (err) {
-			logger.error({
-				level: 'error',
-				message: "something went wrong on saving crop",
-				meta: err
-			})
-			res.status(400).send();
-			return
+	router.put('/:cropId', async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const crop = Crop.create(req.body);
+			if (Object.keys(crop).length === 0){
+				throw new AppError({
+					httpCode: HttpCode.BAD_REQUEST,
+					description: "invalid resource"
+				});
+			}
+			
+			await svc.updateCrop(crop, req.params.cropId);
+			res.json(crop);
+		} catch (error) {
+			logger.error("something went wrong on saving farmer")
+			next(error)
 		}
 
-		res.json(crop);
 	})
 
 	return router;

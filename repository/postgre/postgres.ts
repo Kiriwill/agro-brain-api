@@ -28,9 +28,9 @@ class PGRepository implements Repo {
 		})
 	}
 
-	public async insertFarmer(farmer: Farmer): Promise<Object | Object[] | unknown>{
+	public async insertFarmer(farmers: Farmer[]): Promise<Object | Object[] | unknown>{
 		try {
-			await Farmer.insert(farmer);
+			await Farmer.insert(farmers);
 			return 
 		} catch (error:any) {
 			logger.error(error)
@@ -121,9 +121,9 @@ class PGRepository implements Repo {
 		}
 	}
 
-	public async insertFarm(farm: Farm): Promise<Object | Object[] | unknown>{
+	public async insertFarm(farms: Farm[]): Promise<Object | Object[] | unknown>{
 		try {
-			await Farm.insert(farm);
+			await Farm.insert(farms);
 			return 
 		} catch (error:any) {
 			logger.error(error)
@@ -167,9 +167,9 @@ class PGRepository implements Repo {
 	}
 
 
-	public async insertCrop(crop: Crop): Promise<Object | Object[] | unknown>{
+	public async insertCrop(crops: Crop[]): Promise<Object | Object[] | unknown>{
 		try {
-			await Crop.insert(crop);
+			await Crop.insert(crops);
 			return 
 		} catch (error:any) {
 			logger.error(error)
@@ -273,14 +273,13 @@ class PGRepository implements Repo {
 	public async selectAreaByCrop(): Promise<Object | Object[] | unknown>{
 		try {
 			const total = await Farm.createQueryBuilder()
-				.select("crop.cropArea")
-				.addSelect("COUNT(*)", "cropCount")
+				.select("crop.name")
+				.addSelect("SUM(farm.cropArea)", "total")
 				.from("farm_crops_crop", "farm_crop")
 				.innerJoin("farm", "farm", "farm.id = farm_crop.farmId")
 				.innerJoin("crop", "crop", "crop.id = farm_crop.cropId")
 				.groupBy("crop.name")
 				.getRawMany();
-
 			return total;
 		} catch (error) {
 			throw error;
