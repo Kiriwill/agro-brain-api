@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import NewApp from './http/express';
 import logger from './logger';
 import NewRepo from './repository/repository'
@@ -5,6 +6,7 @@ import NewService from './service/agro'
 
 try {
 	// Init env
+	dotenv.config()
 	process.env.URI_DB = process.env.URI_DB || "postgres://user:password@localhost/agro-db"
 	process.env.PORT = process.env.PORT || "3000"
 

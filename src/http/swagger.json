@@ -1,408 +1,393 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "Agro Brain API",
-    "version": "v1"
-  },
-  "paths": {
-    "/api/v1/user": {
-      "post": {
-		"description": "Create a new User",
-		 "security": {
-			"Bearer": []
-		  },
-        "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-					"type": "object",
-					"properties": {
-						"name": {
-							"type": "string"
-						},
-						"username": {
-							"type": "string"
-						},
-						"password": {
-							"type": "string"
-						}                
-					}
-              	},
-					"example": {
-						"name": "UserTest",
-						"username": "user",
-						"password": "pass"
-					}
-              }
-            }
-        }
-      }
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Agro Brain API",
+        "version": "v1"
     },
-   "/api/v1/user/login": {
-      "post": {
-        "description": "Create a new user token",
-		 "security": {
-			"Bearer": []
-		  },
-		"requestBody": {
-		  "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "username": {
-                      "type": "string"
-                    },
-                    "password": {
-                      "type": "string"
+    "paths": {
+        "/api/v1/user": {
+            "post": {
+				"tags": ["pet"],
+                "description": "Create a new User",
+                "security": {
+                    "Bearer": []
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "name": "UserTest",
+                                "username": "user",
+                                "password": "pass"
+                            }
+                        }
                     }
-                  },
-                  "example": {
-                    "username": "user",
-                    "password": "pass"
-                  }
                 }
-              }
             }
-		},
-        "responses": {
-          "200": {
-            "description": "Successfully login user, return a new JWT token in headers (X-Acess-Token key)"
-          }
+        },
+        "/api/v1/user/login": {
+            "post": {
+                "description": "Create a new user token",
+                "security": {
+                    "Bearer": []
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "username": "user",
+                                    "password": "pass"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully login user, return a new JWT token in headers (X-Acess-Token key)"
+                    }
+                }
+            }
+        },
+        "/api/v1/farmer": {
+            "post": {
+                "description": "Create a new farmer",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "cnpj": {
+                                            "type": "string",
+                                            "required": false,
+                                            "description": "Only required when not CPF"
+                                        },
+                                        "cpf": {
+                                            "type": "string",
+                                            "required": false,
+                                            "description": "Only required when not CNPJ"
+                                        },
+                                        "city": {
+                                            "type": "string"
+                                        },
+                                        "state": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "name": "Teste1",
+                                        "cnpj": "45.158.118/0001-80",
+                                        "city": "Sp",
+                                        "state": "sp"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully created a new farmer"
+                    }
+                }
+            }
+        },
+        "/api/v1/farm": {
+            "post": {
+                "description": "Create new farm",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "totalArea": {
+                                            "type": "number"
+                                        },
+                                        "cropArea": {
+                                            "type": "number"
+                                        },
+                                        "vegetableArea": {
+                                            "type": "string"
+                                        },
+                                        "state": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "name": "Farm Teste",
+                                        "city": "São Paulo",
+                                        "state": "SP",
+                                        "totalArea": 30,
+                                        "cropArea": 10,
+                                        "vegetableArea": 10
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully created a new farm"
+                    }
+                }
+            }
+        },
+        "/api/v1/farmer/{farmerId}": {
+            "delete": {
+                "description": "Delete farmer",
+                "parameters": [
+                    {
+                        "name": "farmerId",
+                        "in": "path",
+                        "type": "string"
+                    }
+                ]
+            },
+            "patch": {
+                "parameters": [
+                    {
+                        "name": "farmerId",
+                        "in": "path",
+                        "type": "string"
+                    }
+                ],
+                "description": "Create a new farmer",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "cnpj": {
+                                            "type": "string",
+                                            "required": false,
+                                            "description": "Only required when not CPF"
+                                        },
+                                        "cpf": {
+                                            "type": "string",
+                                            "required": false,
+                                            "description": "Only required when not CNPJ"
+                                        },
+                                        "city": {
+                                            "type": "string"
+                                        },
+                                        "state": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "name": "Teste1",
+                                        "cnpj": "45.158.118/0001-80",
+                                        "city": "Sp",
+                                        "state": "sp"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated a new farmer"
+                    }
+                }
+            }
+        },
+        "/api/v1/farm/{farmId}": {
+            "delete": {
+                "description": "Delete farm",
+                "parameters": [
+                    {
+                        "name": "farmId",
+                        "in": "path",
+                        "type": "string"
+                    }
+                ]
+            },
+            "patch": {
+                "parameters": [
+                    {
+                        "name": "farmId",
+                        "in": "path",
+                        "type": "string"
+                    }
+                ],
+                "description": "Update farm",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "totalArea": {
+                                            "type": "number"
+                                        },
+                                        "cropArea": {
+                                            "type": "number"
+                                        },
+                                        "vegetableArea": {
+                                            "type": "string"
+                                        },
+                                        "state": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "name": "Farm Teste",
+                                        "city": "São Paulo",
+                                        "state": "SP",
+                                        "totalArea": 30,
+                                        "cropArea": 10,
+                                        "vegetableArea": 10
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated farm"
+                    }
+                }
+            }
+        },
+        "/api/v1/crop/": {
+            "post": {
+                "description": "Create a new Crop",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "name": "Milho Verde"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "description": "Successfully created crops"
+                    }
+                }
+            }
+        },
+        "/api/v1/crop/{cropId}": {
+            "delete": {
+                "description": "Delete crop",
+                "parameters": [
+                    {
+                        "name": "cropId",
+                        "in": "path",
+                        "type": "string"
+                    }
+                ]
+            },
+            "patch": {
+                "parameters": [
+                    {
+                        "name": "cropId",
+                        "in": "path",
+                        "type": "string"
+                    }
+                ],
+                "description": "Update crop",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "name": "CROP TESTE"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully udpated a new crop"
+                    }
+                }
+            }
         }
-      }
     },
-  "/api/v1/farmer": {
-    "post": {
-      "description": "Create a new farmer",
-	  "requestBody": {
-		  "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "cnpj": {
-                      "type": "string",
-                      "required": false,
-                      "description": "Only required when not CPF"
-                    },
-                    "cpf": {
-                      "type": "string",
-                      "required": false,
-                      "description": "Only required when not CNPJ"
-                    },
-                    "city": {
-                      "type": "string"
-                    },
-                    "state": {
-                      "type": "string"
-                    }
-                  },
-                  "example": {
-                    "name": "Teste1",
-                    "cnpj": "45.158.118/0001-80",
-                    "city": "Sp",
-                    "state": "sp"
-                  }
-                }
-              }
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "apiKey",
+                "name": "X-Acess-Token",
+                "in": "header",
+                "description": "e.g: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRkZGRkMiIsImlhdCI6MTcwODk0NzcwMywiZXhwIjoxNzA4OTgzNzAzfQ.kWkHVsiIqcepf5eqi67pZYPdcVDSpk6c2SN4tyfFao4"
             }
-		  }
-	  },
-      "responses": {
-        "200": {
-          "description": "Successfully created a new farmer"
-          }
         }
-	  }
-  },
-
-"/api/v1/farm": {
-    "post": {
-      "description": "Create new farm",
-	  "requestBody": {
-		  "content": {
-			"application/json": {
-				"schema": {
-					"type":"array",
-					"items": {
-					  "type": "object",
-					  "properties": {
-						"name": {
-						  "type": "string"
-						},
-						"totalArea": {
-						  "type": "number"
-						},
-						"cropArea": {
-						  "type": "number"
-						},
-						"vegetableArea": {
-						  "type": "string"
-						},
-						"state": {
-						  "type": "string"
-						}
-					  },
-					  "example": {
-						"name": "Farm Teste",
-						"city": "São Paulo",
-						"state": "SP",
-						"totalArea": 30,
-						"cropArea": 10,
-						"vegetableArea": 10
-						}
-					}
-				}
-			}
-		  }
-	  },
-      "responses": {
-        "200": {
-          "description": "Successfully created a new farm"
+    },
+    "security": [
+        {
+            "bearerAuth": []
         }
-	  }
-	}
-  },
-
-
-"/api/v1/farmer/{farmerId}": {
-	"delete": {
-      "description": "Delete farmer",
-	  "parameters": [
-		  {
-			  "name": "farmerId",
-			  "in": "path",
-			  "type": "string"
-		  }
-	  ]
-	},
-
-    "patch": {
-		"parameters": [
-			  {
-				  "name": "farmerId",
-				  "in": "path",
-				  "type": "string"
-			  }
-	   ],
-      "description": "Create a new farmer",
-	  "requestBody": {
-		  "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "cnpj": {
-                      "type": "string",
-                      "required": false,
-                      "description": "Only required when not CPF"
-                    },
-                    "cpf": {
-                      "type": "string",
-                      "required": false,
-                      "description": "Only required when not CNPJ"
-                    },
-                    "city": {
-                      "type": "string"
-                    },
-                    "state": {
-                      "type": "string"
-                    }
-                  },
-                  "example": {
-                    "name": "Teste1",
-                    "cnpj": "45.158.118/0001-80",
-                    "city": "Sp",
-                    "state": "sp"
-                  }
-                }
-              }
-            }
-		  }
-	  },
-      "responses": {
-        "200": {
-          "description": "Successfully updated a new farmer"
-          }
-        }
-	  }
-},
-
-"/api/v1/farm/{farmId}": {
-	"delete": {
-      "description": "Delete farm",
-	  "parameters": [
-		  {
-			  "name": "farmId",
-			  "in": "path",
-			  "type": "string"
-		  }
-	  ]
-	},
-
-    "patch": {
-	  "parameters": [
-		  {
-			  "name": "farmId",
-			  "in": "path",
-			  "type": "string"
-		  }
-	  ],
-      "description": "Update farm",
-	  "requestBody": {
-		  "content": {
-			"application/json": {
-				"schema": {
-					"type":"array",
-					"items": {
-					  "type": "object",
-					  "properties": {
-						"name": {
-						  "type": "string"
-						},
-						"totalArea": {
-						  "type": "number"
-						},
-						"cropArea": {
-						  "type": "number"
-						},
-						"vegetableArea": {
-						  "type": "string"
-						},
-						"state": {
-						  "type": "string"
-						}
-					  },
-					  "example": {
-						"name": "Farm Teste",
-						"city": "São Paulo",
-						"state": "SP",
-						"totalArea": 30,
-						"cropArea": 10,
-						"vegetableArea": 10
-						}
-					}
-				}
-			}
-		  }
-	  },
-      "responses": {
-        "200": {
-          "description": "Successfully updated farm"
-        }
-	  }
-	}
-
-},
-
-
-"/api/v1/crop/": {
-    "post": {
-      "description": "Create a new Crop",
-      "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    }
-                  },
-                  "example": {
-                    "name": "Milho Verde"
-                  }
-                }
-              }
-            }
-          },
-	  "responses": {
-		"description": "Successfully created crops"
-	  }
-	  }
-	}
-},
-
-
-"/api/v1/crop/{cropId}": {
-	"delete": {
-      "description": "Delete crop",
-	  "parameters": [
-		  {
-			  "name": "cropId",
-			  "in": "path",
-			  "type": "string"
-		  }
-	  ]
-	},
-
-
-    "patch": {
-	  "parameters": [
-		  {
-			  "name": "cropId",
-			  "in": "path",
-			  "type": "string"
-		  }
-	  ],
-      "description": "Update crop",
-	  "requestBody": {
-		  "content": {
-			"application/json": {
-				"schema": {
-					"type":"array",
-					"items": {
-					  "type": "object",
-					  "properties": {
-						"name": {
-						  "type": "string"
-						}
-					  },
-					  "example": {
-						"name": "CROP TESTE"
-						}
-					}
-				}
-			}
-		  }
-	  },
-      "responses": {
-        "200": {
-          "description": "Successfully udpated a new crop"
-        }
-	  }
-	}
-
-}
-
-
-},
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "apiKey",
-        "name": "X-Acess-Token",
-        "in": "header",
-        "description": "e.g: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRkZGRkMiIsImlhdCI6MTcwODk0NzcwMywiZXhwIjoxNzA4OTgzNzAzfQ.kWkHVsiIqcepf5eqi67pZYPdcVDSpk6c2SN4tyfFao4"
-      }
-    }
-  },
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ]
+    ]
 }
