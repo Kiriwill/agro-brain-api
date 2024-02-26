@@ -36,7 +36,6 @@ const farmRouter = (svc: Service, middleware: RequestHandler) => {
 
 	router.patch('/:farmId', middleware, async (req: Request, res: Response, next: NextFunction):Promise<void> => {
 		try {
-			console.log("ENTROUUU")
 			const farm = Farm.create(req.body);
 			if (Object.keys(farm).length === 0){
 				throw new AppError({
