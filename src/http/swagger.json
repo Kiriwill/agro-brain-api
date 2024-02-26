@@ -7,7 +7,7 @@
     "paths": {
         "/api/v1/user": {
             "post": {
-				"tags": ["pet"],
+				"tags": ["User"],
                 "description": "Create a new User",
                 "security": {
                     "Bearer": []
@@ -42,6 +42,7 @@
         "/api/v1/user/login": {
             "post": {
                 "description": "Create a new user token",
+				"tags": ["User"],
                 "security": {
                     "Bearer": []
                 },
@@ -71,6 +72,7 @@
         "/api/v1/farmer": {
             "post": {
                 "description": "Create a new farmer",
+				"tags": ["Farmer"],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -115,6 +117,7 @@
         "/api/v1/farm": {
             "post": {
                 "description": "Create new farm",
+				"tags": ["Farm"],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -158,6 +161,7 @@
         "/api/v1/farmer/{farmerId}": {
             "delete": {
                 "description": "Delete farmer",
+				"tags": ["Farmer"],
                 "parameters": [
                     {
                         "name": "farmerId",
@@ -175,6 +179,7 @@
                     }
                 ],
                 "description": "Create a new farmer",
+				"tags": ["Farmer"],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -219,6 +224,7 @@
         "/api/v1/farm/{farmId}": {
             "delete": {
                 "description": "Delete farm",
+				"tags": ["Farm"],
                 "parameters": [
                     {
                         "name": "farmId",
@@ -228,6 +234,7 @@
                 ]
             },
             "patch": {
+				"tags": ["Farm"],
                 "parameters": [
                     {
                         "name": "farmId",
@@ -278,6 +285,7 @@
         },
         "/api/v1/crop/": {
             "post": {
+				"tags": ["Crop"],
                 "description": "Create a new Crop",
                 "requestBody": {
                     "content": {
@@ -304,6 +312,7 @@
         },
         "/api/v1/crop/{cropId}": {
             "delete": {
+				"tags": ["Crop"],
                 "description": "Delete crop",
                 "parameters": [
                     {
@@ -314,6 +323,7 @@
                 ]
             },
             "patch": {
+				"tags": ["Crop"],
                 "parameters": [
                     {
                         "name": "cropId",
