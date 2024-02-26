@@ -5,7 +5,7 @@ API CRUD com Node.js e Express.js
 `sh
 docker compose up 
 `
-Nota: opcionalmente é possivel rodar localmente com as variaveis no arquivo .env. Veja a inicialização em app.js para saber mais.
+> Nota: opcionalmente é possivel rodar localmente com as variaveis no arquivo .env. Veja a inicialização em app.js para saber mais.
 
 ## Uso
 Acesse a documentação em /api/v1/api-docs para os detalhes sobre os endpoints.
