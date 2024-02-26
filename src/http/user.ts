@@ -9,7 +9,6 @@ const userRouter = (svc: Service) => {
 	router.post('/', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 		try {
 			let user = User.create(req.body);
-			console.log(user)
 			if (Object.keys(user).length === 0){
 				throw new AppError({
 					httpCode: HttpCode.BAD_REQUEST,

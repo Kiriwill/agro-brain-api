@@ -9,18 +9,23 @@ const cropRouter = (svc: Service, middleware: RequestHandler) => {
 	
 	router.post('/', middleware, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 		try {
-			let crops = Crop.create(req.body);
-			delete crops.id
-			if (crops.length === 0){
+			const crops:Crop[] = [];
+			if (!req.body.length){
 				throw new AppError({
 					httpCode: HttpCode.BAD_REQUEST,
 					description: "invalid resource"
 				});
 			}
+
+			for (let b of req.body){
+				let crop = new Crop();
+				crop.name = b.name;
+				crops.push(crop)
+			}
 			await svc.createCrop(crops);
 			res.json(crops);
 		} catch (error) {
-			logger.error("something went wrong on saving farmer", error)
+			logger.error("something went wrong on saving crop", error)
 			next(error)
 		}
 	})
@@ -38,7 +43,7 @@ const cropRouter = (svc: Service, middleware: RequestHandler) => {
 			await svc.updateCrop(crop, req.params.cropId);
 			res.json(crop);
 		} catch (error) {
-			logger.error("something went wrong on saving farmer", error)
+			logger.error("something went wrong on saving crop", error)
 			next(error)
 		}
 

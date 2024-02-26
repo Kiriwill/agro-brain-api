@@ -1,12 +1,33 @@
 version: "3.7"
 services:
+  api:
+    build: .
+    container_name: agrobrain-api
+    restart: always
+    links:
+      - "db"
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+        URI_DB: postgres://user:password@db/agro-db
+        PORT: 3000
+
   db:
     image: postgres:latest
     container_name: agro-db
+    restart: always
     ports:
       - "5432:5432"
+    healthcheck:
+      test: pg_isready -U user -d agro-db
+      interval: 2s
+      timeout: 10s
+      retries: 120
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: agro-db
 

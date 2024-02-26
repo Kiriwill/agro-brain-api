@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn, Unique, BeforeInsert, BeforeUpdate } from "typeorm"
-import { IsNotEmpty, MaxLength, ValidateIf,IsUUID } from "class-validator"
+import { IsNotEmpty, MaxLength, ValidateIf,IsUUID, IsNumber, IsString } from "class-validator"
 import IsCpfValid, {IsCnpjValid} from "./customValidators";
 
 @Entity({ name: "user"})
@@ -9,14 +9,17 @@ export class User extends BaseEntity {
 	
 	@Column({length: 700})
 	@IsNotEmpty()
+	@IsString()
 	name: string;
 
 	@Column({length: 700})
 	@IsNotEmpty()
+	@IsString()
 	username: string;
 
 	@Column({length: 700})
 	@IsNotEmpty()
+	@IsString()
 	password: string;
 	
 	@CreateDateColumn({name: "created_at"})
@@ -33,26 +36,27 @@ export class Farmer extends BaseEntity {
 	
 	@Column({length: 700})
 	@IsNotEmpty()
+	@IsString()
 	name: string
 
 	@Column({unique: true, nullable: true})
 	@ValidateIf((f:Farmer) => !f.cnpj)
-	@IsNotEmpty()
 	@IsCpfValid()
 	cpf: string
 
 	@Column({unique: true, nullable: true})
 	@ValidateIf((f:Farmer) => !f.cpf)
-	@IsNotEmpty()
 	@IsCnpjValid()
 	cnpj: string
 	
 	@Column({length: 700})
 	@IsNotEmpty()
+	@IsString()
 	city: string
 
 	@Column({length: 700})
 	@IsNotEmpty()
+	@IsString()
 	state: string
 
 	@ManyToMany((type) => Farm, (farm) => farm.farmers, { cascade: true, onDelete: "CASCADE" })
@@ -85,6 +89,7 @@ export class Farm extends BaseEntity {
 	
 	@Column({length: 700})
 	@IsNotEmpty()
+	@IsString()
 	name: string
 	
 	@Column({length: 700})
@@ -97,14 +102,17 @@ export class Farm extends BaseEntity {
 
 	@Column({type: "integer", name: 'total_area'})
 	@IsNotEmpty()
+	@IsNumber()
 	totalArea: number
 
 	@Column({type: "integer", name: "crop_area"})
 	@IsNotEmpty()
+	@IsNumber()
 	cropArea: number
 
 	@Column({type: "integer", name: "vegetable_area"})
 	@IsNotEmpty()
+	@IsNumber()
 	vegetableArea: number
 
 	@ManyToMany((type) => Farmer, (farmer) => farmer.farms)
@@ -129,6 +137,7 @@ export class Crop extends BaseEntity {
 	@Column()
 	@IsNotEmpty()
 	@MaxLength(300)
+	@IsString()
 	name: string
 
 	@ManyToMany((type) => Farm, (farm) => farm.crops)

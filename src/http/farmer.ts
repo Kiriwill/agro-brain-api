@@ -9,8 +9,8 @@ const farmerRouter = (svc: Service, middleware: RequestHandler) => {
 	
 	router.post('/', middleware, async (req: Request, res: Response, next: NextFunction):Promise<void> => {
 		try {
-			let farmers = Farmer.create(req.body);
-			if (farmers.length === 0 ){
+			const farmers:Farmer[] = [];
+			if (!req.body.length){
 				throw new AppError({
 					httpCode: HttpCode.BAD_REQUEST,
 					description: "invalid resource"
@@ -18,6 +18,15 @@ const farmerRouter = (svc: Service, middleware: RequestHandler) => {
 				
 			}
 
+			for (const b of req.body) {
+				let farmer = new Farmer();
+				farmer.name = b.name;
+				farmer.state = b.state;
+				farmer.city = b.city;
+				farmer.cpf = b.cpf;
+				farmer.cnpj = b.cnpj;
+				farmers.push(farmer);
+			}
 			await svc.createFarmer(farmers);
 			res.json(farmers);
 		} catch (error:any) {

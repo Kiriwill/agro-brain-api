@@ -9,17 +9,27 @@ const farmRouter = (svc: Service, middleware: RequestHandler) => {
 		
 	router.post('/', middleware, async (req: Request, res: Response, next: NextFunction):Promise<void> => {
 		try {
-			let farms = Farm.create(req.body);
-			if (!farms.length){
+			const farms:Farm[] = [];
+			if (!req.body.length){
 				throw new AppError({
 					httpCode: HttpCode.BAD_REQUEST,
 					description: "invalid resource"
 				});
 			}
+			for (const b of req.body) {
+				let farm = new Farm();
+				farm.name = b.name;
+				farm.state = b.state;
+				farm.city = b.city;
+				farm.totalArea = parseInt(b.totalArea);
+				farm.cropArea = parseInt(b.cropArea);
+				farm.vegetableArea = parseInt(b.vegetableArea);
+				farms.push(farm);
+			}
 			await svc.createFarm(farms);
 			res.json(farms);
 		} catch (error) {
-			logger.error("something went wrong on saving farmer", error)
+			logger.error("something went wrong on saving farm", error)
 			next(error)
 		}
 	})
@@ -38,7 +48,7 @@ const farmRouter = (svc: Service, middleware: RequestHandler) => {
 			await svc.updateFarm(farm, req.params.farmId);
 			res.json(farm);
 		} catch (error) {
-			logger.error("something went wrong on saving farmer", error)
+			logger.error("something went wrong on saving farm", error)
 			next(error)
 		}
 
@@ -59,7 +69,7 @@ const farmRouter = (svc: Service, middleware: RequestHandler) => {
 			await svc.bindCrops(farmId, crops);
 			res.end();
 		} catch(error) {
-			logger.error("something went wrong on saving farmer", error)
+			logger.error("something went wrong on saving farm", error)
 			next(error)
 		}
 

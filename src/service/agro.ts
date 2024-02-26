@@ -3,7 +3,7 @@ import {Service, Repo, Farmer, Farm, Crop, Dashboard, User} from "./service"
 import {MoreThan} from "typeorm";
 import {AppError, HttpCode} from "../errorHandler";
 import logger from "../logger";
-import hashPass, {sign} from "./auth";
+import hashPass, {sign} from "../http/middlewares/auth";
 
 class AgroService implements Service {
 	private repo: Repo;

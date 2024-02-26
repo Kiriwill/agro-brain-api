@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Response, NextFunction} from 'express';
-import { AppError, HttpCode } from "../errorHandler";
+import { AppError, HttpCode } from "../../errorHandler";
 
 export default async function hashPass(password:string){
 	const salt = await bcrypt.genSalt(10);
